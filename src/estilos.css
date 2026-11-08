@@ -1,0 +1,780 @@
+/* Ruleta de Entretenimiento. Pensado para 1920x1080 y el Chromium 87 de webOS 22.
+   Cada tarjeta recibe --t1 y --t2 (tonos de su degradado). */
+
+:root {
+  --texto: #f6f4ff;
+  --texto-suave: #b9b5dc;
+  --dorado: #ffd23f;
+  --naranja: #ff8a3d;
+  --rojo: #ff4d5e;
+  --curva: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --fuente: "LG Smart UI", "Museo Sans", system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html,
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+}
+
+body {
+  font-family: var(--fuente);
+  color: var(--texto);
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+button:focus {
+  outline: none;
+}
+
+#escenario {
+  --tono: 255;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  transform-origin: 0 0;
+  background: radial-gradient(ellipse at 50% 42%, #1b1548 0%, #08071c 58%, #030311 100%);
+}
+
+/* ---------- Fondo ---------- */
+
+.fondo,
+.fondo-tinte,
+.confeti {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.fondo-tinte {
+  color: hsl(var(--tono), 85%, 52%);
+  background: radial-gradient(ellipse 58% 52% at 50% 50%, currentColor, transparent 72%);
+  opacity: 0.3;
+  transition: color 1s ease;
+}
+
+.fondo-rayos {
+  position: absolute;
+  left: 50%;
+  top: 540px;
+  width: 2600px;
+  height: 2600px;
+  margin: -1300px 0 0 -1300px;
+  background: repeating-conic-gradient(rgba(255, 255, 255, 0.07) 0deg 5deg, transparent 5deg 15deg);
+  -webkit-mask-image: radial-gradient(circle, #000 0%, transparent 52%);
+  opacity: 0.45;
+  transition: opacity 0.8s ease;
+  animation: rayos 90s linear infinite;
+}
+
+.celebrando .fondo-rayos {
+  opacity: 1;
+}
+
+@keyframes rayos {
+  to { transform: rotate(360deg); }
+}
+
+.fondo-estrellas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+}
+
+.fondo-piso {
+  position: absolute;
+  left: 50%;
+  top: 790px;
+  width: 1800px;
+  height: 360px;
+  margin-left: -900px;
+  background: radial-gradient(ellipse at center, hsla(var(--tono), 90%, 65%, 0.3), transparent 68%);
+}
+
+/* ---------- Cabecera ---------- */
+
+.cabecera {
+  position: absolute;
+  left: 96px;
+  right: 96px;
+  top: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+}
+
+.marca > svg {
+  width: 104px;
+  height: 104px;
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.45));
+  animation: logo 14s linear infinite;
+}
+
+@keyframes logo {
+  to { transform: rotate(360deg); }
+}
+
+.marca h1 {
+  margin: 0;
+  font-size: 52px;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  line-height: 1.05;
+  background: linear-gradient(90deg, #fff 0%, #ffe48a 45%, #ff9dd0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.subtitulo {
+  margin: 8px 0 0;
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 28px;
+  color: var(--texto-suave);
+}
+
+.chip-categoria {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 20px 5px 8px;
+  border-radius: 999px;
+  font-weight: 800;
+  color: #fff;
+  background: linear-gradient(135deg, hsl(var(--t1), 85%, 58%), hsl(var(--t2), 80%, 36%));
+}
+
+.chip-categoria svg {
+  width: 36px;
+  height: 36px;
+  color: hsl(var(--t2), 70%, 22%);
+}
+
+.pasos {
+  display: flex;
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.paso {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 30px 12px 14px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.16);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--texto-suave);
+  transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}
+
+.paso-numero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  font-weight: 900;
+}
+
+.paso.activo {
+  color: #1a1238;
+  border-color: transparent;
+  background: linear-gradient(135deg, #fff, #ffe48a);
+}
+
+.paso.activo .paso-numero {
+  color: #fff;
+  background: #1a1238;
+}
+
+.paso.hecho .paso-numero {
+  color: #0b2a17;
+  background: #3ddc84;
+}
+
+/* ---------- Ruleta 3D ---------- */
+
+.zona-ruleta {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  perspective: 2000px;
+  perspective-origin: 50% 46%;
+}
+
+.ruleta {
+  position: absolute;
+  left: 50%;
+  top: 520px;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+}
+
+.ruleta.entrando {
+  animation: ruleta-entra 1s var(--curva) 0.2s both;
+}
+
+.ruleta.saliendo {
+  animation: ruleta-sale 0.5s ease-in both;
+  pointer-events: none;
+}
+
+@keyframes ruleta-entra {
+  from { transform: translateY(120px) scale(0.02) rotateY(-220deg); }
+  to { transform: none; }
+}
+
+@keyframes ruleta-sale {
+  to { transform: translateY(-80px) scale(0.02) rotateY(180deg); }
+}
+
+.ruleta-anillo {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-style: preserve-3d;
+}
+
+.tarjeta {
+  position: absolute;
+  left: -170px;
+  top: -230px;
+  width: 340px;
+  height: 460px;
+  transform-style: preserve-3d;
+  cursor: pointer;
+}
+
+.tarjeta-cuerpo {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.35s var(--curva);
+}
+
+.tarjeta.frente .tarjeta-cuerpo {
+  transform: translateZ(60px);
+}
+
+.ruleta.girando .tarjeta-cuerpo {
+  transition-duration: 0.12s;
+}
+
+.tarjeta.ganadora .tarjeta-cuerpo {
+  animation: latido 1.1s ease-in-out infinite;
+}
+
+@keyframes latido {
+  0%, 100% { transform: translateZ(60px) scale(1); }
+  50% { transform: translateZ(110px) scale(1.04); }
+}
+
+/* Resplandor detrás de la tarjeta ganadora. */
+.tarjeta-halo {
+  position: absolute;
+  left: -70px;
+  top: -70px;
+  right: -70px;
+  bottom: -70px;
+  border-radius: 80px;
+  background: radial-gradient(ellipse at center, hsla(var(--t1), 100%, 70%, 0.9), transparent 68%);
+  opacity: 0;
+  transform: translateZ(-4px);
+  pointer-events: none;
+}
+
+.tarjeta.ganadora .tarjeta-halo {
+  animation: halo 1.1s ease-in-out infinite alternate;
+}
+
+@keyframes halo {
+  from { opacity: 0.35; }
+  to { opacity: 1; }
+}
+
+.cara {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 30px;
+  overflow: hidden;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Velo oscuro sobre las tarjetas que no están al frente. */
+.cara::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: #06051a;
+  opacity: 0.55;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.ruleta.girando .cara::after {
+  transition-duration: 0.15s;
+}
+
+.tarjeta.frente .cara-frente::after {
+  opacity: 0;
+}
+
+.cara-frente {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  padding: 36px 28px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.4), transparent 42%),
+    radial-gradient(rgba(255, 255, 255, 0.1) 2px, transparent 2.5px) 0 0 / 22px 22px,
+    linear-gradient(160deg, hsl(var(--t1), 88%, 60%) 0%, hsl(var(--t2), 80%, 30%) 100%);
+  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.25), inset 0 -90px 120px rgba(0, 0, 0, 0.25);
+  -webkit-box-reflect: below 18px linear-gradient(transparent 62%, rgba(255, 255, 255, 0.28));
+}
+
+/* Barrido de luz sobre la tarjeta ganadora. */
+.cara-brillo {
+  position: absolute;
+  left: 0;
+  top: -40%;
+  width: 45%;
+  height: 180%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  transform: translateX(-200%) rotate(20deg);
+  pointer-events: none;
+}
+
+.tarjeta.ganadora .cara-brillo,
+.resultado-tarjeta .cara-brillo {
+  animation: barrido 1.8s ease-in-out infinite;
+}
+
+@keyframes barrido {
+  from { transform: translateX(-200%) rotate(20deg); }
+  to { transform: translateX(420%) rotate(20deg); }
+}
+
+.tarjeta-icono {
+  position: relative;
+  width: 210px;
+  height: 210px;
+  color: hsl(var(--t2), 70%, 22%);
+}
+
+.tarjeta-icono svg,
+.dorso-icono svg,
+.tarjeta-marca svg,
+.resultado-icono svg,
+.anuncio-icono svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.3));
+}
+
+.tarjeta-nombre {
+  position: relative;
+  font-size: 44px;
+  font-weight: 900;
+  line-height: 1.08;
+  text-shadow: 0 3px 12px rgba(0, 0, 0, 0.35);
+  word-break: break-word;
+}
+
+/* Tarjetas de subcategoría */
+.tarjeta-marca {
+  position: absolute;
+  right: -70px;
+  bottom: -60px;
+  width: 320px;
+  height: 320px;
+  opacity: 0.16;
+  color: #000;
+  transform: rotate(-12deg);
+}
+
+.tarjeta-etiqueta {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.tarjeta-etiqueta svg {
+  width: 46px;
+  height: 46px;
+  color: hsl(var(--t2), 70%, 22%);
+}
+
+.tarjeta-nombre-sub {
+  font-size: 52px;
+}
+
+.tarjeta-numero {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 30px;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.cara-dorso {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotateY(180deg);
+  background:
+    radial-gradient(rgba(255, 255, 255, 0.06) 2px, transparent 2.5px) 0 0 / 24px 24px,
+    radial-gradient(circle at 50% 42%, hsl(var(--t1), 50%, 24%), #0b0a24 75%);
+  box-shadow: inset 0 0 0 3px hsla(var(--t1), 85%, 62%, 0.55);
+}
+
+.dorso-icono {
+  width: 150px;
+  height: 150px;
+  opacity: 0.4;
+  color: #0b0a24;
+}
+
+/* ---------- Aguja ---------- */
+
+.aguja {
+  position: absolute;
+  left: 50%;
+  top: 226px;
+  width: 64px;
+  height: 84px;
+  margin-left: -32px;
+  transform-origin: 50% 30%;
+  filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.45));
+  pointer-events: none;
+}
+
+.aguja svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- Pie: botón, anuncio y ayuda ---------- */
+
+.pie {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;
+}
+
+.boton-girar {
+  width: 380px;
+  height: 100px;
+  border: 0;
+  border-radius: 999px;
+  font-size: 44px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #2a1400;
+  background: linear-gradient(135deg, #ffe066, var(--naranja));
+  box-shadow: 0 14px 40px rgba(255, 138, 61, 0.5), inset 0 -6px 0 rgba(0, 0, 0, 0.15), inset 0 3px 0 rgba(255, 255, 255, 0.6);
+  animation: pulso 1.8s ease-in-out infinite;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Opaco a propósito: con transparencia se vería el reflejo de las tarjetas. */
+.boton-girar:disabled {
+  color: rgba(255, 255, 255, 0.45);
+  background: linear-gradient(135deg, #3a3060, #241d45);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.12);
+  animation: none;
+  cursor: default;
+}
+
+@keyframes pulso {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+
+.anuncio {
+  display: none;
+  align-items: center;
+  gap: 24px;
+  height: 100px;
+}
+
+[data-estado="anunciando"] .boton-girar {
+  display: none;
+}
+
+[data-estado="anunciando"] .anuncio {
+  display: flex;
+  animation: anuncio 0.6s var(--curva) both;
+}
+
+@keyframes anuncio {
+  from { transform: scale(0.4); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+.anuncio-icono {
+  width: 96px;
+  height: 96px;
+  padding: 12px;
+  border-radius: 26px;
+  color: hsl(var(--t2), 70%, 22%);
+  background: linear-gradient(135deg, hsl(var(--t1), 88%, 60%), hsl(var(--t2), 80%, 32%));
+}
+
+.anuncio-texto {
+  font-size: 76px;
+  font-weight: 900;
+  background: linear-gradient(90deg, #fff, #ffe48a);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.chips {
+  display: flex;
+  gap: 40px;
+  font-size: 24px;
+  color: var(--texto-suave);
+}
+
+.chips > span {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 52px;
+  height: 38px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--texto);
+}
+
+.chip-rojo {
+  min-width: 0;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--rojo);
+}
+
+/* ---------- Resultado final ---------- */
+
+.resultado {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+  background: radial-gradient(ellipse at center, rgba(6, 5, 26, 0.55), rgba(6, 5, 26, 0.94) 70%);
+  animation: aparecer 0.4s ease both;
+}
+
+@keyframes aparecer {
+  from { opacity: 0; }
+}
+
+.resultado-tarjeta {
+  position: relative;
+  overflow: hidden;
+  width: 780px;
+  padding: 50px 60px 56px;
+  border-radius: 44px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(255, 255, 255, 0.4), transparent 45%),
+    radial-gradient(rgba(255, 255, 255, 0.1) 2px, transparent 2.5px) 0 0 / 24px 24px,
+    linear-gradient(160deg, hsl(var(--t1), 88%, 60%), hsl(var(--t2), 80%, 28%));
+  box-shadow: 0 0 140px hsla(var(--t1), 95%, 60%, 0.55), inset 0 0 0 4px rgba(255, 255, 255, 0.28);
+  animation: tarjeta-resultado 0.8s var(--curva) both;
+}
+
+@keyframes tarjeta-resultado {
+  from { transform: perspective(1200px) rotateX(70deg) scale(0.5); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+.resultado-icono {
+  width: 220px;
+  height: 220px;
+  margin: 0 auto 10px;
+  color: hsl(var(--t2), 70%, 22%);
+}
+
+.resultado-categoria {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.resultado-sub {
+  margin: 6px 0 12px;
+  font-size: 104px;
+  font-weight: 900;
+  line-height: 1.02;
+  text-shadow: 0 6px 22px rgba(0, 0, 0, 0.35);
+}
+
+.resultado-frase {
+  margin: 0;
+  font-size: 36px;
+  font-weight: 700;
+  color: #fff6c8;
+}
+
+.resultado-botones {
+  display: flex;
+  gap: 32px;
+}
+
+.boton {
+  padding: 22px 48px;
+  border-radius: 999px;
+  border: 3px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--texto);
+  transition: transform 0.2s var(--curva), background 0.2s ease, color 0.2s ease;
+}
+
+.boton.enfocado {
+  transform: scale(1.1);
+  border-color: transparent;
+  color: #2a1400;
+  background: linear-gradient(135deg, #ffe066, var(--naranja));
+  box-shadow: 0 12px 34px rgba(255, 138, 61, 0.45);
+}
+
+/* ---------- Avisos ---------- */
+
+.aviso {
+  position: absolute;
+  right: 96px;
+  top: 190px;
+  padding: 16px 30px;
+  border-radius: 16px;
+  background: rgba(20, 16, 50, 0.92);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  font-size: 26px;
+  font-weight: 700;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.aviso.visible {
+  animation: aviso 2.2s ease both;
+}
+
+@keyframes aviso {
+  0% { opacity: 0; transform: translateY(-16px); }
+  12%, 80% { opacity: 1; transform: none; }
+  100% { opacity: 0; }
+}
+
+.aviso-error {
+  position: absolute;
+  left: 96px;
+  right: 96px;
+  bottom: 40px;
+  padding: 20px 28px;
+  border-radius: 14px;
+  background: rgba(160, 20, 40, 0.92);
+  font-size: 26px;
+  z-index: 10;
+}

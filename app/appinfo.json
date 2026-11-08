@@ -1,0 +1,13 @@
+{
+  "id": "com.aplicacioneslg.ruleta",
+  "version": "1.0.0",
+  "vendor": "AplicacionesLG",
+  "type": "web",
+  "main": "index.html",
+  "title": "Ruleta de Entretenimiento",
+  "icon": "icon.png",
+  "largeIcon": "largeIcon.png",
+  "bgColor": "#07061a",
+  "resolution": "1920x1080",
+  "requiredACG": []
+}

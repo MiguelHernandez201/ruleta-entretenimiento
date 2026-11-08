@@ -1,0 +1,23 @@
+{
+  "name": "ruleta-entretenimiento",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Ruleta de Entretenimiento: ruleta 3D de categorías y subcategorías para televisores LG webOS",
+  "scripts": {
+    "dev": "esbuild src/main.js --bundle --target=chrome87 --outdir=app/build --sourcemap --watch=forever --servedir=app --serve=8082",
+    "build": "esbuild src/main.js --bundle --target=chrome87 --outdir=app/build --minify",
+    "empaquetar": "npm run build && node scripts/tv.mjs empaquetar",
+    "instalar-tv": "node scripts/tv.mjs instalar",
+    "lanzar": "node scripts/tv.mjs lanzar",
+    "desplegar": "npm run build && node scripts/tv.mjs desplegar",
+    "inspeccionar": "node scripts/tv.mjs inspeccionar",
+    "dispositivos": "ares-setup-device --list",
+    "iconos": "node scripts/iconos.mjs"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "@webos-tools/cli": "^3.2.6",
+    "esbuild": "^0.28.2"
+  }
+}
